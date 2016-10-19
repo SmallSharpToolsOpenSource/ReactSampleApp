@@ -1,0 +1,7 @@
+ [
+  {"id":1, "username":"johnsmith", "password":"dog", "firstName":"John", "lastName":"Smith"},
+  {"id":2, "username":"janesmith", "password":"cat", "firstName":"Jane", "lastName":"Smith"},
+  {"id":3, "username":"adamsmith", "password":"fish", "firstName":"Adam", "lastName":"Smith"},
+  {"id":4, "username":"katesmith", "password":"turtle", "firstName":"Kate", "lastName":"Smith"},
+  {"id":5, "username":"chrissmith", "password":"bird", "firstName":"chris", "lastName":"Smith"}
+ ]
