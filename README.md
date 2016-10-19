@@ -1,6 +1,6 @@
 # React Sample App
 
-Working with [React Native](https://facebook.github.io/react-native/) with Swift requires an expanding number of languages from simply working with a fully native iOS app which could use just Objective-C or Swift. With the JavaScript used in Reactive Native app in the JavaScriptCore context the syntax can be ES6 or even ES7 syntax with types using [Flow](https://github.com/facebook/flow). The code is then transpiled using [Babel](https://babeljs.io) to an earlier languages specification like ES5 so that the code can run in the JavaScriptCore context and possibly a web browser if some of the code is also used by a website.
+Working with [React Native](https://facebook.github.io/react-native/) with Swift requires an expanding number of languages from simply working with a fully native iOS app which could use just Objective-C or Swift. With the JavaScript used in Reactive Native app in the JavaScriptCore context the syntax can be ES6 or even ES7 syntax with types using [Flow](https://github.com/facebook/flow). The code is then transpiled using [Babel](https://babeljs.io) to an earlier language specification like ES5 so that the code can run in the JavaScriptCore context and possibly a web browser if some of the code is also used by a website.
 
 Within iOS it is necessary to use Objective-C currently to make function bindings available to the JavaScriptCore context. Many modern apps are built with Swift and currently it is possible to select Swift 2.3 or 3.0 for app development.
 
@@ -16,7 +16,7 @@ Isolating code to Swift frameworks allows for enforcing boundaries, a specific d
 
 `Core` -> `Foundation`
 
-The app users both the `Core` and `Kit` frameworks while `Kit` uses `Core` and `Core` does not use the others. Dependencies always go down and never back up. Both `Core` and `Kit` do not use `UIKit` as it is specific to iOS app development. These frameowrks will only use `Foundation` or other frameworks which allow for these frameworks to be used to build apps for iOS, macOS, watchOS and tvOS.
+The app uses both the `Core` and `Kit` frameworks while `Kit` uses `Core` and `Core` does not use the others. Dependencies always go down and never up. Both `Core` and `Kit` do not use `UIKit` as it is specific to iOS app development. These frameworks will only use `Foundation` or other frameworks which allow for these frameworks to be used to build apps for iOS, macOS, watchOS and tvOS.
 
 ## ReactSampleCore
 
@@ -26,31 +26,33 @@ The `Core` framework simply provides the lowest level classes needed to store th
 
 The `Kit` provides services which use the classes provided by the `Core` framework. This framework also does not use `UIKit` to ensure the framework can be used on multiple platforms.
 
-## Bindings
+## React Native Bindings
 
-Within the app the bindings classes use the `RCT_EXPORT_METHOD` macro to export methods to the JavaScriptCore context so that they can be used by JavaScript. These methods should use very little code and leverage what is made avaiable by the `Kit` framework where most of the behavior will be implemented.  
+Within the app the bindings classes use the `RCT_EXPORT_METHOD` macro to export methods to the JavaScriptCore context so that they can be used by JavaScript. These methods should use very little code and leverage what is made available by the `Kit` framework where most of the behavior will be implemented.  
 
 ## Dependency Systems
 
-On the JavaScript side modules are managed using [npm](https://www.npmjs.com) while often with Xcode projects [CocoaPods](https://cocoapods.org) is used. In addition to setting up and maintaining the dependency graph for the app there will be additional dependencies to manage. Manage dependencies effectively it itself a task which requires considerable time and effort. As new releases of the app are prepared dependencies may need to be upgraded or replaced.
+On the JavaScript side modules are managed using [npm](https://www.npmjs.com) and often [CocoaPods](https://cocoapods.org) is used with Xcode projects while [Carthage](https://github.com/Carthage/Carthage) and [SwiftPM](https://swift.org/package-manager/) are other options. In addition to setting up and maintaining the dependency graph for the app there will be additional dependencies to manage. Managing dependencies effectively is a discipline which requires considerable time and effort. As new releases of the app are prepared dependencies may need to be upgraded or replaced.
 
-One example is the Facebook SDK for iOS which currently is made up of 3 distinct modules for Core, Login and Sharing features. Before the it was a single module and it was necessary to upgrade to the new 3 module system which is not compatible with the legacy module. Removing and replacing that dependency takes time and a great deal of knowledge of the app and the SDK to migrate to the new modules.
+One example is the Facebook SDK for iOS which currently is made up of 3 distinct modules for Core, Login and Sharing features. Before the SDK was a single module and it was necessary to upgrade to the new 3 module system which is not compatible with the legacy module. Removing and replacing that dependency takes time and a great deal of knowledge of the app and SDK to migrate to the new modules.
 
 Understanding and managing these dependency systems is critical to preparing a high quality app for release.
 
 ## Testability
 
-It should be possible to test each framework independently to ensure it functions properly for the supported use cases. With testing and versioning it is then possible to manage framework releases which support specific features and address bug fixes and performance optimizations as needed. Version 1.1.3 may be a solid, heavily tested, stable release while 1.2.0-beta is still under development and only uses by the development and QA teams. Once it is ready it could be promoted to be included in the build of the app and prepared for release.
+It should be possible to test each framework independently to ensure it functions properly for the supported use cases. With testing and versioning it is then possible to manage framework releases which support specific features and address bug fixes and performance optimizations as needed. Version 1.1.3 may be a solid, heavily tested, stable release while 1.2.0-beta is still under development and only used by the development and QA teams. Once the 1.2.0 version is ready it can be promoted and included in the build of the app and prepared for release.
 
 ## Root Cause Analysis
 
-When a bug does occur it will be possible to implement a test which reproduces the bug at the lowest possible level and perhaps fix it there with minimal effort. The goal will be to fully test frameworks and ensure the required use cases are supported. With disciplined QA analysis the level of quality will increase and act as a more reliable foundation for the React Native app.
+When a bug is reported it will be possible to implement a test which reproduces the bug at the lowest possible level and perhaps fix it there with minimal effort. The goal will be to fully test frameworks and ensure the required use cases are supported. With disciplined QA analysis the level of quality will increase and act as a more reliable foundation for the React Native app.
 
-By breaking down the app into distinct modules which have enforced boundaries and access controls a root cause analysis could pinpoint and resolve problems with much less effort. And once a problem is discovered a future regression can be prevented by putting tests in place. 
+By breaking down the app into distinct modules which have enforced boundaries and access controls a root cause analysis could pinpoint and resolve problems with much less effort. And once a problem is discovered a future regression can be prevented by putting tests in place.
 
 ## Increased Focus & Productivity
 
-With the bulk of the code written in JavaScript and run in the JavaScriptCore context and the Swift code isolated into frameworks the development cycles will be focused and much faster. Difficulties which arise with compilers, Xcode and the runtime will be minimized and teams with specific expertise for the necessary languages will be able to apply their knowledge to a limited scope of work.  
+With the bulk of the code written in JavaScript and run in the JavaScriptCore context and the Swift code isolated into frameworks the development cycles will be focused and much faster. Difficulties which arise with compilers, Xcode and the runtime will be minimized and teams with specific expertise for the necessary languages will be able to apply their knowledge to a limited scope of work.
+
+Development cycles could be very rapid. Within Xcode there will be a distinct build target for the app and each of the frameworks. By changing the focus to a specific framework only it will be built by Xcode while ignoring the rest of the code base. 
 
 ---
 Brennan Stehling - Fall 2016
